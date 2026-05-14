@@ -1017,7 +1017,13 @@ function renderHome() {
   // Recent payments
   const recent = [...state.payments].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,8);
   document.getElementById('recent-payments').innerHTML = recent.map(p=>{
-    const fmtDate = p.date ? (()=>{const d=new Date(p.date+'T00:00:00');return d.getDate()+' '+MONTHS_SHORT[d.getMonth()]+' '+d.getFullYear();})() : '—';
+    const fmtDate = p.date
+  ? new Date(p.date).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    })
+  : '—';
     return `<tr><td><div class="member-name"><div class="avatar">${getAvatar(p.memberName)}</div>${p.memberName}</div></td>
      <td class="mono">${C(Number(p.amount))}</td>
      <td>${MONTHS_SHORT[p.forMonth-1]||p.forMonth} ${p.forYear}</td>
@@ -1823,7 +1829,7 @@ setInterval(() => {
     syncNow();
   }
 
-}, 30000);
+}, 120000);
 
 function updateSessionUI() {
   const indicator = document.getElementById('admin-indicator');
@@ -1917,7 +1923,13 @@ function renderMyDetails() {
   const myPays = state.payments.filter(p => p.memberId === m.id && p.type === 'deposit').sort((a,b) => new Date(b.date) - new Date(a.date));
   const lastPay = myPays[0];
   const lastDepositAmount = lastPay ? C(Number(lastPay.amount)) : '—';
-  const lastDepositDate = lastPay ? lastPay.date : '—';
+  const lastDepositDate = lastPay && lastPay.date
+  ? new Date(lastPay.date).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    })
+  : '—';
 
   container.innerHTML = `
     <div style="max-width:560px;margin:0 auto">
