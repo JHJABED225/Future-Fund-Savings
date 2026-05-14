@@ -769,12 +769,12 @@ let state = {
   payments: [],
   expenses: [],
   settings: {
-    sheetsUrl: '',
-    syncMode: 'manual',
-    monthlyRate: 500,
+    sheetsUrl: 'https://script.google.com/macros/s/AKfycby2nbZhNEDRXAI_bxqI2wsEEncqa0bcw65Tq3yveumL-MCkeuKoAOF19a2u8FOMOivd/exec',
+    syncMode: 'auto',
+    monthlyRate: 2000,
     currency: '৳',
     fundName: 'Future Fund Savings',
-    foundedDate: '2024-01'
+    foundedDate: '2026-05'
   },
   adminPassword: 'admin123',
   isAdmin: false,
@@ -1756,21 +1756,51 @@ function memberLogin() {
   navigate('home');
 }
 
-function adminLogin() {
-  const pwd = document.getElementById('admin-login-pwd').value;
-  const errEl = document.getElementById('admin-login-error');
-  if (pwd === state.adminPassword) {
-    errEl.style.display = 'none';
-    state.isAdmin = true;
-    state.loggedInMember = null;
-    document.getElementById('admin-login-pwd').value = '';
-    hideLoginScreen();
-    updateSessionUI();
-    navigate('home');
-  } else {
-    errEl.style.display = 'block';
-    document.getElementById('admin-login-pwd').value = '';
+async function fetchFromSheets() {
+  const url = state.settings.sheetsUrl;
+
+  if(!url) {
+    document.getElementById('sync-msg').textContent='⚠️ Set your Google Sheets URL first';
+    return;
   }
+
+  updateSyncStatus('Pulling...', true);
+
+  try {
+    const res = await fetch(url+'?action=fetch');
+    const d = await res.json();
+
+    if(d.members) state.members = d.members;
+    if(d.payments) state.payments = d.payments;
+    if(d.expenses) state.expenses = d.expenses;
+
+    saveState();
+
+    updateSyncStatus('Pulled ✅', false);
+
+    document.getElementById('sync-msg').textContent =
+      '✅ Data pulled from Sheets at ' + new Date().toLocaleTimeString();
+
+    renderPage(state.currentPage);
+
+  } catch(e) {
+
+    updateSyncStatus('Pull failed ❌', false);
+
+    document.getElementById('sync-msg').textContent =
+      '❌ Pull failed: ' + e.message;
+  }
+}
+
+
+// ================= AUTO SYNC =================
+setInterval(() => {
+
+  if(state.settings.syncMode === 'auto') {
+    syncNow();
+  }
+
+}, 30000);
 }
 
 function updateSessionUI() {
