@@ -1674,7 +1674,7 @@ function updateSyncStatus(msg, syncing) {
 async function syncNow() {
   const url = state.settings.sheetsUrl;
   if(!url) {
-    updateSyncStatus('No URL set');
+    updateSyncStatus('https://script.google.com/macros/s/AKfycby2nbZhNEDRXAI_bxqI2wsEEncqa0bcw65Tq3yveumL-MCkeuKoAOF19a2u8FOMOivd/exec');
     if(state.currentPage==='settings') document.getElementById('sync-msg').textContent = '⚠️ Set your Google Sheets URL first';
     return;
   }
@@ -1801,7 +1801,6 @@ setInterval(() => {
   }
 
 }, 30000);
-}
 
 function updateSessionUI() {
   const indicator = document.getElementById('admin-indicator');
