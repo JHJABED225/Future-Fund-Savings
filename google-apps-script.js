@@ -59,7 +59,7 @@
  */
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const SPREADSHEET_ID = 'YOUR_GOOGLE_SHEET_ID_HERE'; // ← REPLACE THIS (Step 1c)
+const SPREADSHEET_ID= '1tOst13necIgh-gehnl1Qz8FXc5rkJuRdca-kMxYGRls' // ← REPLACE THIS (Step 1c)
 const SHEET_MEMBERS  = 'Members';
 const SHEET_PAYMENTS = 'Payments';
 const SHEET_EXPENSES = 'Expenses';
