@@ -1431,7 +1431,10 @@ function renderExpenses() {
     <td style="font-weight:600">${e.title}</td>
     <td><span class="chip" style="background:rgba(96,165,250,.1);color:var(--blue)">${e.category}</span></td>
     <td class="mono" style="color:var(--red)">${C(Number(e.amount))}</td>
-    <td>${e.date}</td>
+    <td>${new Date(e.date).toLocaleDateString('en-GB', {
+  day: '2-digit',
+  month: 'short',
+  year: 'numeric' })} </td>
     <td>${e.by||'—'}</td>
     <td style="color:var(--muted)">${e.note||'—'}</td>
     ${state.isAdmin?`<td><button class="btn btn-outline btn-sm" onclick="editExpense('${e.id}')">Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteExpense('${e.id}')">Del</button></td>`:''}
