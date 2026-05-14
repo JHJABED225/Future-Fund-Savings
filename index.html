@@ -1320,7 +1320,17 @@ function renderPayments() {
     const typeColors = {deposit:'tag-teal',charge:'tag-gold',delay:'tag-red',extra:'tag-green'};
     const typeLabel = typeLabels[p.type] || p.type || 'Deposit';
     const typeColor = typeColors[p.type] || 'tag-teal';
-    const fmtDate = p.date ? (()=>{const d=new Date(p.date+'T00:00:00');return d.getDate()+' '+MONTHS_SHORT[d.getMonth()]+' '+d.getFullYear();})() : '—';
+    // Safe date formatter
+function formatDate(value) {
+  if (!value) return "—"; // handle null/undefined/empty
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "Invalid date"; // handle NaN
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
     return `<tr>
     <td style="color:var(--muted)">${i+1}</td>
     <td><div class="member-name"><div class="avatar">${getAvatar(p.memberName)}</div>${p.memberName}</div></td>
